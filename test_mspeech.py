@@ -50,7 +50,7 @@ else:
 
 ms = ModelSpeech(datapath)
 
-ms.LoadModel(modelpath + 'm_dfcnn/speech_model_dfcnn_e_0_step_41000.model')
+ms.LoadModel(modelpath + 'm_dfcnn/speech_model_dfcnn_e_0_step_64000.model')
 #ms.LoadModel(modelpath + 'm_DFCNN/speech_model_DFCNN_e_0_step_410000.model')
 ms.TestModel(datapath, str_dataset='test', data_count = 64, out_report = True)
 

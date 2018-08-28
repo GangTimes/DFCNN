@@ -38,7 +38,7 @@ else:
 
 ms = ModelSpeech(datapath)
 
-ms.LoadModel(modelpath + 'm_dfcnn/speech_model_dfcnn_e_0_step_40000.model')
+ms.LoadModel(modelpath + 'm_dfcnn/speech_model_dfcnn_e_0_step_64000.model')
 #ms.LoadModel(modelpath + 'm_DFCNN/speech_model_DFCNN_e_0_step_410000.model')
 #ms.LoadModel(modelpath + 'm26/speech_model26_e_0_step_122500.model')
 
@@ -47,8 +47,8 @@ ms.LoadModel(modelpath + 'm_dfcnn/speech_model_dfcnn_e_0_step_40000.model')
 #r = ms.RecognizeSpeech_FromFile('E:\语音数据集\ST-CMDS-20170001_1-OS\\20170001P00241I0053.wav')
 #r = ms.RecognizeSpeech_FromFile('E:\\语音数据集\\ST-CMDS-20170001_1-OS\\20170001P00020I0087.wav')
 #r = ms.RecognizeSpeech_FromFile('E:\\语音数据集\\wav\\train\\A11\\A11_167.WAV')
-r = ms.RecognizeSpeech_FromFile('/home/speech.AI/github/DFCNN/dataset/data_thchs30/test/D11_750.wav')
-
+#r = ms.RecognizeSpeech_FromFile('/home/speech.AI/github/DFCNN/dataset/data_thchs30/test/D11_750.wav')
+r = ms.RecognizeSpeech_FromFile('/home/speech.AI/github/DFCNN/dataset/data_thchs30/train/A33_100.wav')
 print('*[提示] 语音识别结果：\n',r)
 
 

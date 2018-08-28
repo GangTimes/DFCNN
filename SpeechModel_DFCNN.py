@@ -26,7 +26,7 @@ abspath = ''
 ModelName='_dfcnn'
 #ModelName='_dfcnn'
 #base_count=411000
-base_count=41000
+base_count=64000
 #NUM_GPU = 2
 
 class ModelSpeech(): # 语音模型类

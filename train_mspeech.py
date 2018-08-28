@@ -11,7 +11,7 @@ import os
 import tensorflow as tf
 from keras.backend.tensorflow_backend import set_session
 from keras.utils import multi_gpu_model
-
+#from AM import ModelSpeech
 from SpeechModel_DFCNN import ModelSpeech
 
 
@@ -46,7 +46,7 @@ else:
 ms = ModelSpeech(datapath)
 
 #ms.LoadModel(modelpath + 'm_DFCNN/speech_model_DFCNN_e_0_step_411000.model')
-ms.LoadModel(modelpath + 'm_dfcnn/speech_model_dfcnn_e_0_step_41000.model')
+ms.LoadModel(modelpath + 'm_dfcnn/speech_model_dfcnn_e_0_step_64000.model')
 ms.TrainModel(datapath, epoch = 50, batch_size = 32, save_step = 1000)
 
 
