@@ -23,19 +23,19 @@ from keras.optimizers import SGD, Adadelta, Adam, RMSprop
 from read_data import DataSpeech
 
 abspath = ''
-ModelName='_dfcnn'
+ModelName='_DFCNN'
 #ModelName='_dfcnn'
 #base_count=411000
-base_count=64000
+base_count=0
 #NUM_GPU = 2
 
 class ModelSpeech(): # 语音模型类
 	def __init__(self, datapath):
 		'''
 		初始化
-		默认输出的拼音的表示大小是1422，即1421个拼音+1个空白块
+		默认输出的拼音的表示大小是1434，即1433个拼音+1个空白块
 		'''
-		MS_OUTPUT_SIZE = 1422
+		MS_OUTPUT_SIZE = 1434
 		self.MS_OUTPUT_SIZE = MS_OUTPUT_SIZE # 神经网络最终输出的每一个字符向量维度的大小
 		#self.BATCH_SIZE = BATCH_SIZE # 一次训练的batch
 		self.label_max_string_length = 64
@@ -68,13 +68,12 @@ class ModelSpeech(): # 语音模型类
 		
 		'''
 		input_data = Input(name='the_input', shape=(self.AUDIO_LENGTH, self.AUDIO_FEATURE_LENGTH, 1))#1600*200
-		
 		layer_h1 = Conv2D(32, (3,3), use_bias=False, activation='relu', padding='same', kernel_initializer='he_normal')(input_data) # 卷积层
 		layer_h1 = BatchNormalization(mode=0,axis=1)(layer_h1)
 		#layer_h1 = Dropout(0.05)(layer_h1)
 		
 		layer_h2 = Conv2D(32, (3,3), use_bias=True, activation='relu', padding='same', kernel_initializer='he_normal')(layer_h1) # 卷积层
-		layer_h2 = BatchNormalization(axis=1)(layer_h2)
+		#layer_h2 = BatchNormalization(axis=1)(layer_h2)
 		layer_h3 = MaxPooling2D(pool_size=2, strides=None, padding="valid")(layer_h2) # 池化层 800*100
 		#layer_h3 = Dropout(0.2)(layer_h2) # 随机中断部分神经网络连接，防止过拟合
 		#layer_h3 = Dropout(0.05)(layer_h3) # 随机中断部分神经网络连接，防止过拟合
@@ -83,7 +82,7 @@ class ModelSpeech(): # 语音模型类
 		#layer_h4 = Dropout(0.1)(layer_h4)
 		layer_h4 = BatchNormalization(axis=1)(layer_h4)
 		layer_h5 = Conv2D(64, (3,3), use_bias=True, activation='relu', padding='same', kernel_initializer='he_normal')(layer_h4) # 卷积层
-		layer_h5 = BatchNormalization(axis=1)(layer_h5)
+		#layer_h5 = BatchNormalization(axis=1)(layer_h5)
 		layer_h6 = MaxPooling2D(pool_size=2, strides=None, padding="valid")(layer_h5) # 池化层 400*50
 		#layer_h6 = Dropout(0.1)(layer_h6)
 		layer_h6 = BatchNormalization(axis=1)(layer_h6)
@@ -119,7 +118,8 @@ class ModelSpeech(): # 语音模型类
 		#layer_h5 = LSTM(256, activation='relu', use_bias=True, return_sequences=True)(layer_h4) # LSTM层
 		#layer_h6 = Dropout(0.2)(layer_h5) # 随机中断部分神经网络连接，防止过拟合
 		#layer_h16 = Dropout(0.3)(layer_h16)
-		layer_h17 = Dense(128, activation="relu", use_bias=True, kernel_initializer='he_normal')(layer_h16) # 全连接层
+		layer_h17 = BatchNormalization(axis=-1)(layer_h16)	
+		layer_h17 = Dense(128, activation="relu", use_bias=True, kernel_initializer='he_normal')(layer_h17) # 全连接层
 		layer_h17 = BatchNormalization(axis=-1)(layer_h17)
 		#layer_h17 = Dropout(0.3)(layer_h17)
 		layer_h18 = Dense(self.MS_OUTPUT_SIZE, use_bias=True, kernel_initializer='he_normal')(layer_h17) # 全连接层
@@ -137,8 +137,6 @@ class ModelSpeech(): # 语音模型类
 		#layer_out = Lambda(ctc_lambda_func,output_shape=(self.MS_OUTPUT_SIZE, ), name='ctc')([y_pred, labels, input_length, label_length])#(layer_h6) # CTC
 		loss_out = Lambda(self.ctc_lambda_func, output_shape=(1,), name='ctc')([y_pred, labels, input_length, label_length])
 		
-		
-		
 		model = Model(inputs=[input_data, labels, input_length, label_length], outputs=loss_out)
 		model.summary()
 		
@@ -146,7 +144,7 @@ class ModelSpeech(): # 语音模型类
 		#sgd = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
 		#ada_d = Adadelta(lr = 0.01, rho = 0.95, epsilon = 1e-06)
 		#rms = RMSprop(lr=0.01,rho=0.9,epsilon=1e-06)		
-		opt = Adam(lr = 0.01, beta_1 = 0.9, beta_2 = 0.999, decay = 0.0, epsilon = 10e-8)
+		opt = Adam(lr = 0.7, beta_1 = 0.9, beta_2 = 0.999, decay = 0.0, epsilon = 10e-8)
 		model=multi_gpu_model(model,gpus=2)	
 		model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer = opt)
 		#model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=sgd)
