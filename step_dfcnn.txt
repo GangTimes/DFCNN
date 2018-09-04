@@ -1,1 +1,0 @@
-model_speech/m_dfcnn/speech_model_dfcnn_e_0_step_64000
