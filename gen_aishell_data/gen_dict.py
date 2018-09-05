@@ -1,9 +1,5 @@
 from collections import Counter
 
-
-
-
-
 class aishell():
 	"""docstring for aishell"""
 	def __init__(self, arg):
