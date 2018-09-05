@@ -26,20 +26,7 @@ class DataSpeech():
 		
 		self.datapath = path; # 数据存放位置根目录
 		self.type = type # 数据类型，分为三种：训练集(train)、验证集(dev)、测试集(test)
-		
-		self.slash = ''
-		if(system_type == 'Windows'):
-			self.slash='\\' # 反斜杠
-		elif(system_type == 'Linux'):
-			self.slash='/' # 正斜杠
-		else:
-			print('*[Message] Unknown System\n')
-			self.slash='/' # 正斜杠
-		
-		if(self.slash != self.datapath[-1]): # 在目录路径末尾增加斜杠
-			self.datapath = self.datapath + self.slash
-		
-		
+
 		self.dic_wavlist_thchs30 = {}
 		self.dic_symbollist_thchs30 = {}
 		self.dic_wavlist_stcmds = {}
