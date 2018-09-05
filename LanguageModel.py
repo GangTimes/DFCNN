@@ -38,7 +38,7 @@ class ModelLanguage(): # 语音模型类
 		# 先取出一个字，即拼音列表中第一个字
 		str_tmp = [list_syllable[0]]
 		
-		for i in range(0, length - 1):
+		for i in range(length - 1):
 			# 依次从第一个字开始每次连续取两个字拼音
 			str_split = list_syllable[i] + ' ' + list_syllable[i+1]
 			#print(str_split,str_tmp,r)
@@ -211,7 +211,6 @@ class ModelLanguage(): # 语音模型类
 
 
 if(__name__=='__main__'):
-	
 	ml = ModelLanguage('./model_language/')
 	ml.LoadModel()
 	
