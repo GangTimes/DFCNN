@@ -28,9 +28,7 @@ class ModelSpeech(): # 语音模型类
 		初始化
 		默认输出的拼音的表示大小是1434，即1433个拼音+1个空白块
 		'''
-		MS_OUTPUT_SIZE = 1434
-		self.MS_OUTPUT_SIZE = MS_OUTPUT_SIZE # 神经网络最终输出的每一个字符向量维度的大小
-		#self.BATCH_SIZE = BATCH_SIZE # 一次训练的batch
+		self.MS_OUTPUT_SIZE = 1413 # 神经网络最终输出的每一个字符向量维度的大小
 		self.label_max_string_length = 64
 		self.AUDIO_LENGTH = 1600
 		self.AUDIO_FEATURE_LENGTH = 200
