@@ -6,7 +6,6 @@ import time
 from general_function.file_wav import *
 from general_function.file_dict import *
 from general_function.gen_func import *
-from keras.utils import multi_gpu_model
 import tensorflow as tf
 import keras as kr
 import numpy as np
@@ -20,7 +19,6 @@ from keras.optimizers import SGD, Adadelta, Adam, RMSprop
 
 from read_data import DataSpeech
 
-abspath = ''
 ModelName='_DFCNN'
 base_count=0
 
@@ -47,7 +45,6 @@ class ModelSpeech(): # 语音模型类
 		隐藏层：全连接层
 		输出层：全连接层，神经元数量为self.MS_OUTPUT_SIZE，使用softmax作为激活函数，
 		CTC层：使用CTC的loss作为损失函数，实现连接性时序多输出
-		
 		'''
 		input_data = Input(name='the_input', shape=(self.AUDIO_LENGTH, self.AUDIO_FEATURE_LENGTH, 1))#1600*200
 		layer_h1 = Conv2D(32, (3,3), use_bias=False, activation='relu', padding='same', kernel_initializer='he_normal')(input_data) # 卷积层
@@ -138,7 +135,7 @@ class ModelSpeech(): # 语音模型类
 		return K.ctc_batch_cost(labels, y_pred, input_length, label_length)
 	
 	
-	def TrainModel(self, datapath, epoch = 2, save_step = 1000, batch_size = 32, filename = abspath + 'model_speech/m' + ModelName + '/speech_model'+ModelName):
+	def TrainModel(self, datapath, epoch = 2, save_step = 1000, batch_size = 32, filename = 'model_speech/m' + ModelName + '/speech_model'+ModelName):
 		'''
 		训练模型
 		参数：
@@ -172,14 +169,14 @@ class ModelSpeech(): # 语音模型类
 				self.TestModel(self.datapath, str_dataset='train', data_count = 4)
 				self.TestModel(self.datapath, str_dataset='dev', data_count = 4)
 				
-	def LoadModel(self,filename = abspath + 'model_speech/m'+ModelName+'/speech_model'+ModelName+'.model'):
+	def LoadModel(self,filename = 'model_speech/m'+ModelName+'/speech_model'+ModelName+'.model'):
 		'''
 		加载模型参数
 		'''
 		self._model.load_weights(filename)
 		self.base_model.load_weights(filename + '.base')
 
-	def SaveModel(self,filename = abspath + 'model_speech/m'+ModelName+'/speech_model'+ModelName,comment=''):
+	def SaveModel(self,filename = 'model_speech/m'+ModelName+'/speech_model'+ModelName,comment=''):
 		'''
 		保存模型参数
 		'''
@@ -321,15 +318,11 @@ class ModelSpeech(): # 语音模型类
 		
 	@property
 	def model(self):
-		'''
-		返回keras model
-		'''
 		return self._model
 
 
 if __name__=='__main__':
-	datapath =  abspath + ''
-	modelpath =  abspath + 'model_speech/'
+	modelpath = 'model_speech/'
 	if(not os.path.exists(modelpath)): # 判断保存模型的目录是否存在
 		os.makedirs(modelpath) # 如果不存在，就新建一个，避免之后保存模型的时候炸掉
 	ms = ModelSpeech(datapath)
@@ -337,8 +330,6 @@ if __name__=='__main__':
 	#ms.LoadModel(modelpath + 'm251/speech_model251_e_0_step_98000.model')
 	ms.TrainModel(datapath, epoch = 50, batch_size = 16, save_step = 500)
 	#ms.TestModel(datapath, str_dataset='test', data_count = 128, out_report = True)
-	#r = ms.RecognizeSpeech_FromFile('E:\\语音数据集\\ST-CMDS-20170001_1-OS\\20170001P00241I0053.wav')
-	#r = ms.RecognizeSpeech_FromFile('E:\\语音数据集\\ST-CMDS-20170001_1-OS\\20170001P00020I0087.wav')
 	#r = ms.RecognizeSpeech_FromFile('E:\\语音数据集\\wav\\train\\A11\\A11_167.WAV')
 	#r = ms.RecognizeSpeech_FromFile('E:\\语音数据集\\wav\\test\\D4\\D4_750.wav')
 	#print('*[提示] 语音识别结果：\n',r)
