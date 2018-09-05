@@ -14,21 +14,6 @@ import platform as plat
 class ModelLanguage(): # 语音模型类
 	def __init__(self, modelpath):
 		self.modelpath = modelpath
-		system_type = plat.system() # 由于不同的系统的文件路径表示不一样，需要进行判断
-		
-		self.slash = ''
-		if(system_type == 'Windows'):
-			self.slash = '\\'
-		elif(system_type == 'Linux'):
-			self.slash = '/'
-		else:
-			print('*[Message] Unknown System\n')
-			self.slash = '/'
-		
-		if(self.slash != self.modelpath[-1]): # 在目录路径末尾增加斜杠
-			self.modelpath = self.modelpath + self.slash
-		
-		pass
 		
 	def LoadModel(self):
 		self.dict_pinyin = self.GetSymbolDict('dict.txt')
@@ -227,7 +212,7 @@ class ModelLanguage(): # 语音模型类
 
 if(__name__=='__main__'):
 	
-	ml = ModelLanguage('model_language')
+	ml = ModelLanguage('./model_language/')
 	ml.LoadModel()
 	
 	#str_pinyin = ['zhe4','zhen1','shi4','ji2', 'hao3','de5']
