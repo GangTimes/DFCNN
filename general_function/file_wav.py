@@ -40,69 +40,6 @@ def GetMfccFeature(wavsignal, fs):
 	wav_feature = np.column_stack((feat_mfcc, feat_mfcc_d, feat_mfcc_dd))
 	return wav_feature
 
-def GetFrequencyFeature(wavsignal, fs):
-	# wav波形 加时间窗以及时移10ms
-	time_window = 25 # 单位ms
-	data_input = []
-	
-	#print(int(len(wavsignal[0])/fs*1000 - time_window) // 10)
-	wav_length = len(wavsignal[0]) # 计算一条语音信号的原始长度
-	range0_end = int(len(wavsignal[0])/fs*1000 - time_window) // 10 # 计算循环终止的位置，也就是最终生成的窗数
-	for i in range(0, range0_end):
-		p_start = i * 160
-		p_end = p_start + 400
-		data_line = []
-		
-		for j in range(p_start, p_end):
-			data_line.append(wavsignal[0][j]) 
-			#print('wavsignal[0][j]:\n',wavsignal[0][j])
-		#data_line = abs(fft(data_line)) / len(wavsignal[0])
-		data_line = fft(data_line) / wav_length
-		data_line2 = []
-		for fre_sig in data_line: 
-			# 分别取出频率信号的实部和虚部作为语音信号的频率特征
-			# 直接使用复数的话，之后会被numpy将虚部丢弃，造成信息丢失
-			#print('fre_sig:\n',fre_sig)
-			data_line2.append(fre_sig.real)
-			data_line2.append(fre_sig.imag)
-		
-		data_input.append(data_line2[0:len(data_line2)//2]) # 除以2是取一半数据，因为是对称的
-		#print('data_input:\n',data_input)
-		#print('data_line:\n',data_line)
-	#print(len(data_input),len(data_input[0]))
-	return data_input
-
-def GetFrequencyFeature2(wavsignal, fs):
-	# wav波形 加时间窗以及时移10ms
-	time_window = 25 # 单位ms
-	window_length = fs / 1000 * time_window # 计算窗长度的公式，目前全部为400固定值
-	
-	wav_arr = np.array(wavsignal)
-	#wav_length = len(wavsignal[0])
-	wav_length = wav_arr.shape[1]
-	
-	range0_end = int(len(wavsignal[0])/fs*1000 - time_window) // 10 # 计算循环终止的位置，也就是最终生成的窗数
-	data_input = np.zeros((range0_end, 200), dtype = np.float) # 用于存放最终的频率特征数据
-	data_line = np.zeros((1, 400), dtype = np.float)
-	for i in range(0, range0_end):
-		p_start = i * 160
-		p_end = p_start + 400
-		
-		data_line = wav_arr[0, p_start:p_end]
-		'''
-		x=np.linspace(0, 400 - 1, 400, dtype = np.int64)
-		w = 0.54 - 0.46 * np.cos(2 * np.pi * (x) / (400 - 1) ) # 汉明窗
-		data_line = data_line * w # 加窗
-		'''
-		data_line = np.abs(fft(data_line)) / wav_length
-		
-		
-		data_input[i]=data_line[0:200] # 设置为400除以2的值（即200）是取一半数据，因为是对称的
-		
-	#print(data_input.shape)
-	return data_input
-
-
 x=np.linspace(0, 400 - 1, 400, dtype = np.int64)
 w = 0.54 - 0.46 * np.cos(2 * np.pi * (x) / (400 - 1) ) # 汉明窗
 
@@ -119,7 +56,7 @@ def GetFrequencyFeature3(wavsignal, fs):
 	data_input = np.zeros((range0_end, 200), dtype = np.float) # 用于存放最终的频率特征数据
 	data_line = np.zeros((1, 400), dtype = np.float)
 	
-	for i in range(0, range0_end):
+	for i in range(range0_end):
 		p_start = i * 160
 		p_end = p_start + 400
 		
@@ -128,7 +65,6 @@ def GetFrequencyFeature3(wavsignal, fs):
 		data_line = data_line * w # 加窗
 		
 		data_line = np.abs(fft(data_line)) / wav_length
-		
 		
 		data_input[i]=data_line[0:200] # 设置为400除以2的值（即200）是取一半数据，因为是对称的
 		

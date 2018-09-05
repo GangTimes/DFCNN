@@ -128,9 +128,6 @@ class DataSpeech():
 			filename = self.dic_wavlist_stcmds[self.list_wavnum_stcmds[(n + yushu - 1)%length]]
 			list_symbol=self.dic_symbollist_stcmds[self.list_symbolnum_stcmds[(n + yushu - 1)%length]]
 		
-		if('Windows' == plat.system()):
-			filename = filename.replace('/','\\') # windows系统下需要执行这一行，对文件路径做特别处理
-		
 		wavsignal,fs=read_wav_data(self.datapath + filename)
 		
 		# 获取输出特征
