@@ -42,13 +42,8 @@ class ModelSpeech(): # 语音模型类
 		self.AUDIO_LENGTH = 1600
 		self.AUDIO_FEATURE_LENGTH = 200
 		self._model, self.base_model = self.CreateModel() 
-		
 		self.datapath = datapath
-		self.slash = '/'
-		if(self.slash != self.datapath[-1]): # 在目录路径末尾增加斜杠
-			self.datapath = self.datapath + self.slash
-	
-		
+
 	def CreateModel(self):
 		'''
 		定义DFCNN模型，使用函数式模型
