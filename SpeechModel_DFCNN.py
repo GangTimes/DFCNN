@@ -265,52 +265,23 @@ class ModelSpeech(): # 语音模型类
 		预测结果
 		返回语音识别后的拼音符号列表
 		'''
-		
 		batch_size = 1 
 		in_len = np.zeros((batch_size),dtype = np.int32)
-		
 		in_len[0] = input_len
 		
 		x_in = np.zeros((batch_size, 1600, self.AUDIO_FEATURE_LENGTH, 1), dtype=np.float)
-		
 		for i in range(batch_size):
 			x_in[i,0:len(data_input)] = data_input
 		
-		
 		base_pred = self.base_model.predict(x = x_in)
-		
-		#print('base_pred:\n', base_pred)
-		
-		#y_p = base_pred
-		#for j in range(200):
-		#	mean = np.sum(y_p[0][j]) / y_p[0][j].shape[0]
-		#	print('max y_p:',np.max(y_p[0][j]),'min y_p:',np.min(y_p[0][j]),'mean y_p:',mean,'mid y_p:',y_p[0][j][100])
-		#	print('argmin:',np.argmin(y_p[0][j]),'argmax:',np.argmax(y_p[0][j]))
-		#	count=0
-		#	for i in range(y_p[0][j].shape[0]):
-		#		if(y_p[0][j][i] < mean):
-		#			count += 1
-		#	print('count:',count)
-		
+	
 		base_pred =base_pred[:, :, :]
-		#base_pred =base_pred[:, 2:, :]
-		
 		r = K.ctc_decode(base_pred, in_len, greedy = True, beam_width=100, top_paths=1)
-		
-		#print('r', r)
-		
-		
 		r1 = K.get_value(r[0][0])
-		#print('r1', r1)
-		
-		
-		#r2 = K.get_value(r[1])
-		#print(r2)
-		
+
 		r1=r1[0]
-		
 		return r1
-		pass
+
 	
 	def RecognizeSpeech(self, wavsignal, fs):
 		'''
