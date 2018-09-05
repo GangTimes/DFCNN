@@ -127,8 +127,4 @@ def start_server(ip, port):
 	print('HTTP server closed')
 	
 if __name__ == '__main__':
-	
 	start_server('', 20000)
-	
-	
-	

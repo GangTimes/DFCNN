@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 @author: nl8590687
 语音识别的语言模型
@@ -8,7 +7,6 @@
 
 尚未完成
 """
-import platform as plat
 
 
 class ModelLanguage(): # 语音模型类
@@ -210,7 +208,7 @@ class ModelLanguage(): # 语音模型类
 		return dic
 
 
-if(__name__=='__main__'):
+if __name__=='__main__':
 	ml = ModelLanguage('./model_language/')
 	ml.LoadModel()
 	

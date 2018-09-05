@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-import platform as plat
+
 import os
 os.environ['KERAS_BACKEND'] = 'tensorflow'
 import time
@@ -23,10 +22,7 @@ from read_data import DataSpeech
 
 abspath = ''
 ModelName='_DFCNN'
-#ModelName='_dfcnn'
-#base_count=411000
 base_count=0
-#NUM_GPU = 2
 
 class ModelSpeech(): # 语音模型类
 	def __init__(self, datapath):
@@ -125,10 +121,8 @@ class ModelSpeech(): # 语音模型类
 		#ada_d = Adadelta(lr = 0.01, rho = 0.95, epsilon = 1e-06)
 		#rms = RMSprop(lr=0.01,rho=0.9,epsilon=1e-06)		
 		opt = Adam(lr = 0.7, beta_1 = 0.9, beta_2 = 0.999, decay = 0.0, epsilon = 10e-8)
-		# model=multi_gpu_model(model,gpus=2)	
 		model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer = opt)
 		#model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=sgd)
-		#model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=rms)
 		
 		# captures output of softmax so we can decode the output during visualization
 		test_func = K.function([input_data], [y_pred])
@@ -311,28 +305,19 @@ class ModelSpeech(): # 语音模型类
 		#print('time cost:',t3-t2)
 		list_symbol_dic = GetSymbolList(self.datapath) # 获取拼音列表
 		
-		
 		r_str=[]
 		for i in r1:
 			r_str.append(list_symbol_dic[i])
 		
 		return r_str
-		pass
 		
 	def RecognizeSpeech_FromFile(self, filename):
 		'''
 		最终做语音识别用的函数，识别指定文件名的语音
 		'''
-		
 		wavsignal,fs = read_wav_data(filename)
+		return self.RecognizeSpeech(wavsignal, fs)
 		
-		r = self.RecognizeSpeech(wavsignal, fs)
-		
-		return r
-		
-		pass
-		
-	
 		
 	@property
 	def model(self):
@@ -342,39 +327,12 @@ class ModelSpeech(): # 语音模型类
 		return self._model
 
 
-if(__name__=='__main__'):
-	
-	#import tensorflow as tf
-	#from keras.backend.tensorflow_backend import set_session
-	#os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-	#进行配置，使用70%的GPU
-	#config = tf.ConfigProto()
-	#config.gpu_options.per_process_gpu_memory_fraction = 0.95
-	#config.gpu_options.allow_growth=True   #不全部占满显存, 按需分配
-	#set_session(tf.Session(config=config))
-	
-	
+if __name__=='__main__':
 	datapath =  abspath + ''
-	modelpath =  abspath + 'model_speech'
-	
-	
+	modelpath =  abspath + 'model_speech/'
 	if(not os.path.exists(modelpath)): # 判断保存模型的目录是否存在
 		os.makedirs(modelpath) # 如果不存在，就新建一个，避免之后保存模型的时候炸掉
-	
-	system_type = plat.system() # 由于不同的系统的文件路径表示不一样，需要进行判断
-	if(system_type == 'Windows'):
-		datapath = 'E:\\语音数据集'
-		modelpath = modelpath + '\\'
-	elif(system_type == 'Linux'):
-		datapath =  abspath + 'dataset'
-		modelpath = modelpath + '/'
-	else:
-		print('*[Message] Unknown System\n')
-		datapath = 'dataset'
-		modelpath = modelpath + '/'
-	
 	ms = ModelSpeech(datapath)
-	
 	
 	#ms.LoadModel(modelpath + 'm251/speech_model251_e_0_step_98000.model')
 	ms.TrainModel(datapath, epoch = 50, batch_size = 16, save_step = 500)

@@ -1,16 +1,12 @@
-
-# -*- coding: utf-8 -*-
 """
 @author: nl8590687
 用于测试整个一套语音识别系统的程序
 语音模型 + 语言模型
 """
-import platform as plat
 import os
 import tensorflow as tf
 from keras.backend.tensorflow_backend import set_session
 from SpeechModel_DFCNN import ModelSpeech
-#from SpeechModel_old import ModelSpeech
 from LanguageModel import ModelLanguage
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
@@ -31,10 +27,6 @@ ms.LoadModel(modelpath + 'm_dfcnn/speech_model_dfcnn_e_0_step_64000.model')
 #ms.LoadModel(modelpath + 'm26/speech_model26_e_0_step_122500.model')
 
 #ms.TestModel(datapath, str_dataset='test', data_count = 64, out_report = True)
-#r = ms.RecognizeSpeech_FromFile('E:\\语音数据集\\ST-CMDS-20170001_1-OS\\20170001P00241I0052.wav')
-#r = ms.RecognizeSpeech_FromFile('E:\语音数据集\ST-CMDS-20170001_1-OS\\20170001P00241I0053.wav')
-#r = ms.RecognizeSpeech_FromFile('E:\\语音数据集\\ST-CMDS-20170001_1-OS\\20170001P00020I0087.wav')
-#r = ms.RecognizeSpeech_FromFile('E:\\语音数据集\\wav\\train\\A11\\A11_167.WAV')
 #r = ms.RecognizeSpeech_FromFile('/home/speech.AI/github/DFCNN/dataset/data_thchs30/test/D11_750.wav')
 r = ms.RecognizeSpeech_FromFile('/home/speech.AI/github/DFCNN/dataset/data_thchs30/train/A33_100.wav')
 print('*[提示] 语音识别结果：\n',r)
@@ -50,17 +42,3 @@ str_pinyin = r
 #str_pinyin =  ['su1', 'bei3', 'jun1', 'de5', 'yi4','xie1', 'ai4', 'guo2', 'jiang4', 'shi4', 'ma3', 'zhan4', 'shan1', 'ming2', 'yi1', 'dong4', 'ta1', 'ju4', 'su1', 'bi3', 'ai4', 'dan4', 'tian2','mei2', 'bai3', 'ye3', 'fei1', 'qi3', 'kan4', 'zhan4']
 r = ml.SpeechToText(str_pinyin)
 print('语音转文字结果：\n',r)
-
-
-
-
-
-
-
-
-
-
-
-
-
-

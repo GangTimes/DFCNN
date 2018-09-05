@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 @author: nl8590687
 用于训练语音识别系统语音模型的程序
 
 """
-import platform as plat
 import os
 
 import tensorflow as tf
@@ -27,7 +25,7 @@ datapath = './dataset/'
 modelpath = 'model_speech/'
 
 if(not os.path.exists(modelpath)): # 判断保存模型的目录是否存在
-	os.makedirs(modelpath) # 如果不存在，就新建一个，避免之后保存模型的时候炸掉
+    os.makedirs(modelpath) # 如果不存在，就新建一个，避免之后保存模型的时候炸掉
 
 ms = ModelSpeech(datapath)
 
