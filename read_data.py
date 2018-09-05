@@ -35,8 +35,6 @@ class DataSpeech():
 		
 		self.dic_wavlist_thchs30 = {}
 		self.dic_symbollist_thchs30 = {}
-		self.dic_wavlist_stcmds = {}
-		self.dic_symbollist_stcmds = {}
 		
 		self.SymbolNum = 0 # 记录拼音符号数量
 		self.list_symbol = self.GetSymbolList() # 全部汉语拼音符号列表
@@ -63,28 +61,20 @@ class DataSpeech():
 		# 设定选取哪一项作为要使用的数据集
 		if(self.type=='train'):
 			filename_wavlist_thchs30 = 'thchs30' + self.slash + 'train.wav.lst'
-			filename_wavlist_stcmds = 'st-cmds' + self.slash + 'train.wav.txt'
 			filename_symbollist_thchs30 = 'thchs30' + self.slash + 'train.syllable.txt'
-			filename_symbollist_stcmds = 'st-cmds' + self.slash + 'train.syllable.txt'
 		elif(self.type=='dev'):
-			filename_wavlist_thchs30 = 'thchs30' + self.slash + 'cv.wav.lst'
-			filename_wavlist_stcmds = 'st-cmds' + self.slash + 'dev.wav.txt'
-			filename_symbollist_thchs30 = 'thchs30' + self.slash + 'cv.syllable.txt'
-			filename_symbollist_stcmds = 'st-cmds' + self.slash + 'dev.syllable.txt'
+			filename_wavlist_thchs30 = 'thchs30' + self.slash + 'dev.wav.lst'
+			filename_symbollist_thchs30 = 'thchs30' + self.slash + 'dev.syllable.txt'
 		elif(self.type=='test'):
 			filename_wavlist_thchs30 = 'thchs30' + self.slash + 'test.wav.lst'
-			filename_wavlist_stcmds = 'st-cmds' + self.slash + 'test.wav.txt'
 			filename_symbollist_thchs30 = 'thchs30' + self.slash + 'test.syllable.txt'
-			filename_symbollist_stcmds = 'st-cmds' + self.slash + 'test.syllable.txt'
 		else:
 			filename_wavlist = '' # 默认留空
 			filename_symbollist = ''
 		# 读取数据列表，wav文件列表和其对应的符号列表
 		self.dic_wavlist_thchs30,self.list_wavnum_thchs30 = get_wav_list(self.datapath + filename_wavlist_thchs30)
-		self.dic_wavlist_stcmds,self.list_wavnum_stcmds = get_wav_list(self.datapath + filename_wavlist_stcmds)
 		
 		self.dic_symbollist_thchs30,self.list_symbolnum_thchs30 = get_wav_symbol(self.datapath + filename_symbollist_thchs30)
-		self.dic_symbollist_stcmds,self.list_symbolnum_stcmds = get_wav_symbol(self.datapath + filename_symbollist_stcmds)
 		self.DataNum = self.GetDataNum()
 	
 	def GetDataNum(self):
@@ -94,10 +84,8 @@ class DataSpeech():
 		'''
 		num_wavlist_thchs30 = len(self.dic_wavlist_thchs30)
 		num_symbollist_thchs30 = len(self.dic_symbollist_thchs30)
-		num_wavlist_stcmds = len(self.dic_wavlist_stcmds)
-		num_symbollist_stcmds = len(self.dic_symbollist_stcmds)
-		if(num_wavlist_thchs30 == num_symbollist_thchs30 and num_wavlist_stcmds == num_symbollist_stcmds):
-			DataNum = num_wavlist_thchs30 + num_wavlist_stcmds
+		if num_wavlist_thchs30 == num_symbollist_thchs30:
+			DataNum = num_wavlist_thchs30
 		else:
 			DataNum = -1
 		
@@ -113,20 +101,9 @@ class DataSpeech():
 		返回：
 			三个包含wav特征矩阵的神经网络输入值，和一个标定的类别矩阵神经网络输出值
 		'''
-		bili = 2
-		if(self.type=='train'):
-			bili = 11
-			
 		# 读取一个文件
-		if(n_start % bili == 0):
-			filename = self.dic_wavlist_thchs30[self.list_wavnum_thchs30[n_start // bili]]
-			list_symbol=self.dic_symbollist_thchs30[self.list_symbolnum_thchs30[n_start // bili]]
-		else:
-			n = n_start // bili * (bili - 1)
-			yushu = n_start % bili
-			length=len(self.list_wavnum_stcmds)
-			filename = self.dic_wavlist_stcmds[self.list_wavnum_stcmds[(n + yushu - 1)%length]]
-			list_symbol=self.dic_symbollist_stcmds[self.list_symbolnum_stcmds[(n + yushu - 1)%length]]
+		filename = self.dic_wavlist_thchs30[self.list_wavnum_thchs30[n_start]]
+		list_symbol=self.dic_symbollist_thchs30[self.list_symbolnum_thchs30[n_start]]
 		
 		wavsignal,fs=read_wav_data(self.datapath + filename)
 		
