@@ -61,7 +61,6 @@ class ModelSpeech(): # 语音模型类
 		layer_h2 = Conv2D(32, (3,3), use_bias=True, activation='relu', padding='same', kernel_initializer='he_normal')(layer_h1) # 卷积层
 		#layer_h2 = BatchNormalization(axis=1)(layer_h2)
 		layer_h3 = MaxPooling2D(pool_size=2, strides=None, padding="valid")(layer_h2) # 池化层 800*100
-		#layer_h3 = Dropout(0.2)(layer_h2) # 随机中断部分神经网络连接，防止过拟合
 		#layer_h3 = Dropout(0.05)(layer_h3) # 随机中断部分神经网络连接，防止过拟合
 		layer_h3 = BatchNormalization(axis=1)(layer_h3)
 		layer_h4 = Conv2D(64, (3,3), use_bias=True, activation='relu', padding='same', kernel_initializer='he_normal')(layer_h3) # 卷积层
@@ -97,13 +96,8 @@ class ModelSpeech(): # 语音模型类
 		#layer_h14 = BatchNormalization(axis=-1)(layer_h14)
 		layer_h15 = MaxPooling2D(pool_size=1, strides=None, padding="valid")(layer_h14) # 池化层 None*200*25*128
 		
-		#test=Model(inputs = input_data, outputs = layer_h12)
-		#test.summary()
-		
 		layer_h16 = Reshape((200, 3200))(layer_h15) #Reshape层
-		#layer_h5 = LSTM(256, activation='relu', use_bias=True, return_sequences=True)(layer_h4) # LSTM层
 		#layer_h6 = Dropout(0.2)(layer_h5) # 随机中断部分神经网络连接，防止过拟合
-		#layer_h16 = Dropout(0.3)(layer_h16)
 		layer_h17 = BatchNormalization(axis=-1)(layer_h16)	
 		layer_h17 = Dense(128, activation="relu", use_bias=True, kernel_initializer='he_normal')(layer_h17) # 全连接层
 		layer_h17 = BatchNormalization(axis=-1)(layer_h17)
@@ -139,8 +133,7 @@ class ModelSpeech(): # 语音模型类
 		# captures output of softmax so we can decode the output during visualization
 		test_func = K.function([input_data], [y_pred])
 		
-		print('[*提示] 创建模型成功，模型编译成功')
-		#print('[*Info] Create Model Successful, Compiles Model Successful. ')
+		print('[*Info] Create Model Successful, Compiles Model Successful. ')
 		return model, model_data
 		
 	def ctc_lambda_func(self, args):
@@ -149,7 +142,6 @@ class ModelSpeech(): # 语音模型类
 		y_pred = y_pred[:, :, :]
 		#y_pred = y_pred[:, 2:, :]
 		return K.ctc_batch_cost(labels, y_pred, input_length, label_length)
-	
 	
 	
 	def TrainModel(self, datapath, epoch = 2, save_step = 1000, batch_size = 32, filename = abspath + 'model_speech/m' + ModelName + '/speech_model'+ModelName):
