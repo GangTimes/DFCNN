@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import os
 import wave
@@ -122,7 +121,7 @@ def get_wav_list(filename):
 	dic_filelist={} # 初始化字典
 	list_wavmark=[] # 初始化wav列表
 	for i in txt_lines:
-		if(i!=''):
+		if i:
 			txt_l=i.split(' ')
 			dic_filelist[txt_l[0]] = txt_l[1]
 			list_wavmark.append(txt_l[0])
@@ -148,7 +147,6 @@ def get_wav_symbol(filename):
 	return dic_symbol_list,list_symbolmark
 	
 if __name__=='__main__':
-	
 	wave_data, fs = read_wav_data("../../data/data_wsj/wav/train/A11/A11_0.WAV")  
 	
 	wav_show(wave_data[0],fs)

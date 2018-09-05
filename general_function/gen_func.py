@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-'''
-一些通用函数
-'''
 
 import difflib
+
 
 def GetEditDistance(str1, str2):
 	leven_cost = 0

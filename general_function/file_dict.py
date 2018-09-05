@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
 '''
 获取符号字典列表的程序
 '''
-
-
 def GetSymbolList(datapath):
 	'''
 	加载拼音符号列表，用于标记符号
