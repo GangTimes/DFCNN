@@ -1,76 +1,36 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
-import platform as plat
 import os
-
+import random
 import numpy as np
 from general_function.file_wav import *
 from general_function.file_dict import *
 
-import random
-#import scipy.io.wavfile as wav
-from scipy.fftpack import fft
-
 class DataSpeech():
-	
-	
 	def __init__(self, path, type, LoadToMem = False, MemWavCount = 10000):
-		'''
-		初始化
-		参数：
-			path：数据存放位置根目录
-		'''
-		
-		system_type = plat.system() # 由于不同的系统的文件路径表示不一样，需要进行判断
-		
 		self.datapath = path; # 数据存放位置根目录
 		self.type = type # 数据类型，分为三种：训练集(train)、验证集(dev)、测试集(test)
-		
-		self.slash = '/'
-		
-		if(self.slash != self.datapath[-1]): # 在目录路径末尾增加斜杠
-			self.datapath = self.datapath + self.slash
-		
 		
 		self.dic_wavlist_thchs30 = {}
 		self.dic_symbollist_thchs30 = {}
 		
 		self.SymbolNum = 0 # 记录拼音符号数量
 		self.list_symbol = self.GetSymbolList() # 全部汉语拼音符号列表
-		self.list_wavnum=[] # wav文件标记列表
-		self.list_symbolnum=[] # symbol标记列表
 		
 		self.DataNum = 0 # 记录数据量
 		self.LoadDataList()
 		
-		self.wavs_data = []
-		self.LoadToMem = LoadToMem
-		self.MemWavCount = MemWavCount
-		pass
-	
+
 	def LoadDataList(self):
-		'''
-		加载用于计算的数据列表
-		参数：
-			type：选取的数据集类型
-				train 训练集
-				dev 开发集
-				test 测试集
-		'''
-		# 设定选取哪一项作为要使用的数据集
 		if(self.type=='train'):
-			filename_wavlist_thchs30 = 'thchs30' + self.slash + 'train.wav.lst'
-			filename_symbollist_thchs30 = 'thchs30' + self.slash + 'train.syllable.txt'
+			filename_wavlist_thchs30 = 'thchs30/train.wav.lst'
+			filename_symbollist_thchs30 = 'thchs30/train.syllable.txt'
 		elif(self.type=='dev'):
-			filename_wavlist_thchs30 = 'thchs30' + self.slash + 'dev.wav.lst'
-			filename_symbollist_thchs30 = 'thchs30' + self.slash + 'dev.syllable.txt'
+			filename_wavlist_thchs30 = 'thchs30/dev.wav.lst'
+			filename_symbollist_thchs30 = 'thchs30/dev.syllable.txt'
 		elif(self.type=='test'):
-			filename_wavlist_thchs30 = 'thchs30' + self.slash + 'test.wav.lst'
-			filename_symbollist_thchs30 = 'thchs30' + self.slash + 'test.syllable.txt'
-		else:
-			filename_wavlist = '' # 默认留空
-			filename_symbollist = ''
+			filename_wavlist_thchs30 = 'thchs30/test.wav.lst'
+			filename_symbollist_thchs30 = 'thchs30/test.syllable.txt'
 		# 读取数据列表，wav文件列表和其对应的符号列表
 		self.dic_wavlist_thchs30,self.list_wavnum_thchs30 = get_wav_list(self.datapath + filename_wavlist_thchs30)
 		
@@ -78,37 +38,22 @@ class DataSpeech():
 		self.DataNum = self.GetDataNum()
 	
 	def GetDataNum(self):
-		'''
-		获取数据的数量
-		当wav数量和symbol数量一致的时候返回正确的值，否则返回-1，代表出错。
-		'''
 		num_wavlist_thchs30 = len(self.dic_wavlist_thchs30)
 		num_symbollist_thchs30 = len(self.dic_symbollist_thchs30)
 		if num_wavlist_thchs30 == num_symbollist_thchs30:
 			DataNum = num_wavlist_thchs30
 		else:
 			DataNum = -1
-		
 		return DataNum
 		
 		
 	def GetData(self,n_start,n_amount=1):
-		'''
-		读取数据，返回神经网络输入值和输出值矩阵(可直接用于神经网络训练的那种)
-		参数：
-			n_start：从编号为n_start数据开始选取数据
-			n_amount：选取的数据数量，默认为1，即一次一个wav文件
-		返回：
-			三个包含wav特征矩阵的神经网络输入值，和一个标定的类别矩阵神经网络输出值
-		'''
-		# 读取一个文件
 		filename = self.dic_wavlist_thchs30[self.list_wavnum_thchs30[n_start]]
 		list_symbol=self.dic_symbollist_thchs30[self.list_symbolnum_thchs30[n_start]]
 		
 		wavsignal,fs=read_wav_data(self.datapath + filename)
 		
 		# 获取输出特征
-		
 		feat_out=[]
 		#print("数据编号",n_start,filename)
 		for i in list_symbol:
@@ -138,18 +83,12 @@ class DataSpeech():
 		batch_size: 一次产生的数据量
 		需要再修改。。。
 		'''
-		
 		labels = []
 		for i in range(0,batch_size):
 			#input_length.append([1500])
 			labels.append([0.0])
 		
-		
-		
 		labels = np.array(labels, dtype = np.float)
-		
-		#print(input_length,len(input_length))
-		
 		while True:
 			X = np.zeros((batch_size, audio_length, 200, 1), dtype = np.float)
 			#y = np.zeros((batch_size, 64, self.SymbolNum), dtype=np.int16)
@@ -158,9 +97,6 @@ class DataSpeech():
 			#generator = ImageCaptcha(width=width, height=height)
 			input_length = []
 			label_length = []
-			
-			
-			
 			for i in range(batch_size):
 				ran_num = random.randint(0,self.DataNum - 1) # 获取一个随机数
 				data_input, data_labels = self.GetData(ran_num)  # 通过随机数取一个数据
@@ -233,7 +169,7 @@ class DataSpeech():
 		v=np.array(v_tmp)
 		return v
 	
-if(__name__=='__main__'):
+if __name__=='__main__':
 	#path='E:\\语音数据集'
 	#l=DataSpeech(path)
 	#l.LoadDataList('train')

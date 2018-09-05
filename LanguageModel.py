@@ -8,7 +8,6 @@
 尚未完成
 """
 
-
 class ModelLanguage(): # 语音模型类
 	def __init__(self, modelpath):
 		self.modelpath = modelpath
@@ -20,8 +19,8 @@ class ModelLanguage(): # 语音模型类
 		self.pinyin = self.GetPinyin(self.modelpath + 'dic_pinyin.txt')
 		model = (self.dict_pinyin, self.model1, self.model2 )
 		return model
-		pass
 	
+
 	def SpeechToText(self, list_syllable):
 		'''
 		为语音识别专用的处理函数
@@ -61,7 +60,6 @@ class ModelLanguage(): # 语音模型类
 		
 		if(str_decode != []):
 			r += str_decode[0][0]
-		
 		return r
 	
 	def decode(self,list_syllable, yuzhi = 0.0001):
@@ -143,7 +141,6 @@ class ModelLanguage(): # 语音模型类
 					list_words[j] = tmp
 		
 		return list_words
-		pass
 		
 	def GetSymbolDict(self, dictfilename):
 		'''
