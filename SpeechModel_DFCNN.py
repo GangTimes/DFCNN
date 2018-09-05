@@ -7,7 +7,6 @@ import time
 from general_function.file_wav import *
 from general_function.file_dict import *
 from general_function.gen_func import *
-from general_function.muti_gpu import *
 from keras.utils import multi_gpu_model
 import tensorflow as tf
 import keras as kr
@@ -132,7 +131,7 @@ class ModelSpeech(): # 语音模型类
 		#ada_d = Adadelta(lr = 0.01, rho = 0.95, epsilon = 1e-06)
 		#rms = RMSprop(lr=0.01,rho=0.9,epsilon=1e-06)		
 		opt = Adam(lr = 0.7, beta_1 = 0.9, beta_2 = 0.999, decay = 0.0, epsilon = 10e-8)
-		model=multi_gpu_model(model,gpus=2)	
+		# model=multi_gpu_model(model,gpus=2)	
 		model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer = opt)
 		#model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=sgd)
 		#model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=rms)
