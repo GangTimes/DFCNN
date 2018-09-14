@@ -1,0 +1,16 @@
+.metadata/
+.DS_Store
+.settings
+.classpath
+.project
+proguard-project.txt
+project.properties
+bin
+gen
+obj
+values-
+output
+__pycache__
+.ipynb_checkpoints
+.complete.txt
+data_thchs30
