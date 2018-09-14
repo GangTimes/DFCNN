@@ -23,14 +23,14 @@ class DataSpeech():
 
 	def LoadDataList(self):
 		if(self.type=='train'):
-			filename_wavlist_thchs30 = 'thchs30/resource/list/train.wav.lst'
-			filename_symbollist_thchs30 = 'thchs30/resource/trans/train.syllable.txt'
+			filename_wavlist_thchs30 = 'resource/list/train.wav.lst'
+			filename_symbollist_thchs30 = 'resource/trans/train.syllable.txt'
 		elif(self.type=='dev'):
-			filename_wavlist_thchs30 = 'thchs30/resource/list/dev.wav.lst'
-			filename_symbollist_thchs30 = 'thchs30/resource/trans/dev.syllable.txt'
+			filename_wavlist_thchs30 = 'resource/list/dev.wav.lst'
+			filename_symbollist_thchs30 = 'resource/trans/dev.syllable.txt'
 		elif(self.type=='test'):
-			filename_wavlist_thchs30 = 'thchs30/resource/list/test.wav.lst'
-			filename_symbollist_thchs30 = 'thchs30/resource/trans/test.syllable.txt'
+			filename_wavlist_thchs30 = 'resource/list/test.wav.lst'
+			filename_symbollist_thchs30 = 'resource/trans/test.syllable.txt'
 		# 读取数据列表，wav文件列表和其对应的符号列表
 		self.dic_wavlist_thchs30,self.list_wavnum_thchs30 = get_wav_list(self.datapath + filename_wavlist_thchs30)
 		
@@ -51,7 +51,7 @@ class DataSpeech():
 		filename = self.dic_wavlist_thchs30[self.list_wavnum_thchs30[n_start]]
 		list_symbol=self.dic_symbollist_thchs30[self.list_symbolnum_thchs30[n_start]]
 		
-		wavsignal,fs=read_wav_data('../data/data_wsj/' + filename)
+		wavsignal,fs=read_wav_data(self.datapath + filename)
 		
 		# 获取输出特征
 		feat_out=[]

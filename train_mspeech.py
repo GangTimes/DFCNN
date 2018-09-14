@@ -21,7 +21,7 @@ config.gpu_options.per_process_gpu_memory_fraction = 0.95
 #config.gpu_options.allow_growth=True   #不全部占满显存, 按需分配
 set_session(tf.Session(config=config))
 
-datapath = '../tensorflow-examples/speech/data/'
+datapath = '../tensorflow-examples/speech/data/thchs30/'
 modelpath = 'model_speech/'
 
 if(not os.path.exists(modelpath)): # 判断保存模型的目录是否存在
