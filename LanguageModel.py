@@ -93,11 +93,9 @@ class ModelLanguage(): # 语音模型类
 						if tmp_words in self.model2: 
 							# 核心！在当前概率上乘转移概率，公式简化为第n-1和n个字出现的次数除以第n-1个字出现的次数
 							tuple_word[1] = tuple_word[1] * float(self.model2[tmp_words]) / float(self.model1[tmp_words[-2]])
-						else:
-							continue
-						if(tuple_word[1] >= pow(yuzhi, i)):
-							# 大于阈值之后保留，否则丢弃
-							list_words_2.append(tuple_word)
+							if(tuple_word[1] >= pow(yuzhi, i)):
+								    # 大于阈值之后保留，否则丢弃
+								    list_words_2.append(tuple_word)
 				list_words = list_words_2
 		for i in range(len(list_words)):
 			for j in range(i + 1, len(list_words)):
@@ -108,67 +106,17 @@ class ModelLanguage(): # 语音模型类
 		
 		return list_words
 		
-	def GetSymbolDict(self, dictfilename):
-		'''
-		读取拼音汉字的字典文件
-		返回读取后的字典
-		'''
-		txt_obj = open(dictfilename, 'r', encoding='UTF-8') # 打开文件并读入
-		txt_text = txt_obj.read()
-		txt_obj.close()
-		txt_lines = txt_text.split('\n') # 文本分割
+	def GetSymbolDict(self, filename):
+		with open(filename, 'r', encoding='utf-8') as f:
+		    return {line.split('\t')[0]: [s for s in line.split('\t')[1]] for line in f}
 		
-		dic_symbol = {} # 初始化符号字典
-		for i in txt_lines:
-			list_symbol=[] # 初始化符号列表
-			if(i!=''):
-				txt_l=i.split('\t')
-				pinyin = txt_l[0]
-				for word in txt_l[1]:
-					list_symbol.append(word)
-			dic_symbol[pinyin] = list_symbol
-		
-		return dic_symbol
-		
-	def GetLanguageModel(self, modelLanFilename):
-		'''
-		读取语言模型的文件
-		返回读取后的模型
-		'''
-		txt_obj = open(modelLanFilename, 'r', encoding='UTF-8') # 打开文件并读入
-		txt_text = txt_obj.read()
-		txt_obj.close()
-		txt_lines = txt_text.split('\n') # 文本分割
-		
-		dic_model = {} # 初始化符号字典
-		for i in txt_lines:
-			if(i!=''):
-				txt_l=i.split('\t')
-				if(len(txt_l) == 1):
-					continue
-				#print(txt_l)
-				dic_model[txt_l[0]] = txt_l[1]
-				
-		return dic_model
+	def GetLanguageModel(self, filename):
+		with open(filename, 'r', encoding='utf-8') as f:
+		    return {line.split('\t')[0]: line.split('\t')[1] for line in f}
 	
 	def GetPinyin(self, filename):
-		file_obj = open(filename,'r',encoding='UTF-8')
-		txt_all = file_obj.read()
-		file_obj.close()
-	
-		txt_lines = txt_all.split('\n')
-		dic={}
-	
-		for line in txt_lines:
-			if(line == ''):
-				continue
-			pinyin_split = line.split('\t')
-			
-			list_pinyin=pinyin_split[0]
-			
-			if(list_pinyin not in dic and int(pinyin_split[1]) > 1):
-				dic[list_pinyin] = pinyin_split[1]
-		return dic
+		with open(filename, 'r', encoding='utf-8') as f:
+		    return {line.split('\t')[0]: line.split('\t')[1] for line in f}
 
 
 if __name__=='__main__':
@@ -180,12 +128,12 @@ if __name__=='__main__':
 	#str_pinyin = ['ni3', 'hao3','a1']
 	#str_pinyin = ['wo3','dui4','shi4','mei2','cuo4','ni3','hao3']
 	#str_pinyin = ['wo3','dui4','shi4','tian1','mei2','na5','li3','hai4']
-	#str_pinyin = ['ba3','zhe4','xie1','zuo4','wan2','wo3','jiu4','qu4','shui4','jiao4']
+	str_pinyin = ['ba3','zhe4','xie1','zuo4','wan2','wo3','jiu4','qu4','shui4','jiao4']
 	#str_pinyin = ['wo3','qu4','a4','mei2','shi4','er2','la1']
 	#str_pinyin = ['wo3', 'men5', 'qun2', 'li3', 'xiong1', 'di4', 'jian4', 'mei4', 'dou1', 'zai4', 'shuo1']
 	#str_pinyin = ['su1', 'an1', 'ni3', 'sui4', 'li4', 'yun4', 'sui2', 'cong2', 'jiao4', 'ming2', 'tao2', 'qi3', 'yu2', 'peng2', 'ya4', 'yang4', 'chao1', 'dao3', 'jiang1', 'li3', 'yuan2', 'kang1', 'zhua1', 'zou3']
 	#str_pinyin = ['da4', 'jia1', 'hao3']
-	str_pinyin = ['kao3', 'yan2', 'yu3', 'ci2', 'hui4']
+	#str_pinyin = ['kao3', 'yan2', 'yu3', 'ci2', 'hui4']
 	#r = ml.decode(str_pinyin)
 	r=ml.SpeechToText(str_pinyin)
 	print('语音转文字结果：\n',r)
