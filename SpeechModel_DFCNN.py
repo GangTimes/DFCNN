@@ -167,14 +167,14 @@ class ModelSpeech(): # 语音模型类
 				self.TestModel(self.datapath, str_dataset='train', data_count = 4)
 				self.TestModel(self.datapath, str_dataset='dev', data_count = 4)
 				
-	def LoadModel(self,filename = 'model_speech/m'+ModelName+'/speech_model'+ModelName+'.model'):
+	def LoadModel(self,filename = './model_speech/m'+ModelName+'/speech_model'+ModelName+'.model'):
 		'''
 		加载模型参数
 		'''
 		self._model.load_weights(filename)
 		self.base_model.load_weights(filename + '.base')
 
-	def SaveModel(self,filename = 'model_speech/m'+ModelName+'/speech_model'+ModelName,comment=''):
+	def SaveModel(self,filename = './model_speech/m'+ModelName+'/speech_model'+ModelName,comment=''):
 		'''
 		保存模型参数
 		'''
